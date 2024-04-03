@@ -1,0 +1,2 @@
+/usr/bin/ar qc libenergy.a  CMakeFiles/energy.dir/Interface.cpp.o CMakeFiles/energy.dir/Volume.cpp.o
+/usr/bin/ranlib libenergy.a

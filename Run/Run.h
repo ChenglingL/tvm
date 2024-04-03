@@ -27,6 +27,7 @@
 
 class Run;
 #include <vector>
+#include <string>
 #include "../Vertex/Vertex.h"
 #include "../Edge/Edge.h"
 #include "../Polygon/Polygon.h"
@@ -66,6 +67,8 @@ class Run {
     std::vector<Edge *> edges_;
     std::vector<Polygon *> polygons_;
     std::vector<Cell *> cells_;
+    std::string workDir;
+    std::string parasID;
 
     Run();
     int     start();
@@ -88,6 +91,8 @@ class Run {
     int     dumpCellVolume();
     int     dumpTopo();
     int     dumpReconnection();
+    void    setWorkDir(std::string Dir){workDir=Dir;};
+    void    setParasID(std::string ids){parasID=ids;};
 };
 
 #endif

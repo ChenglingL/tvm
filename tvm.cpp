@@ -32,18 +32,51 @@
 #include <algorithm>
 #include <cmath>
 #include <chrono>
+#include <getopt.h>
 #include <unordered_map>
 #include <random>
 #include "Run/Run.h"
 
 using namespace std;
 
-int     InitializeAll(Run *);
+int     InitializeAll(Run *, int numpts, int idx, string confName);
 int     LoadConf(string filename, Run *);
 
 int main(int argc, char *argv[]) {
+    int numpts = 200;
+    double temp = 0.1;
+    double s0 = 5.8;
+    int idx = 0;
+    double kV = 10.;
+    int c;
+    while((c=getopt(argc,argv,"k:n:g:m:s:r:a:i:v:b:x:y:z:p:t:e:q:c:")) != -1)
+        switch(c)
+        {
+            case 'n': numpts = atoi(optarg); break;
+            case 't': temp = atof(optarg); break;
+            case 's': s0 = atof(optarg); break;
+            case 'k': kV = atof(optarg); break;
+            case 'i': idx = atof(optarg); break;
+            case '?':
+                    if(optopt=='c')
+                        std::cerr<<"Option -" << optopt << "requires an argument.\n";
+                    else if(isprint(optopt))
+                        std::cerr<<"Unknown option '-" << optopt << "'.\n";
+                    else
+                        std::cerr << "Unknown option character.\n";
+                    return 1;
+            default:
+                       abort();
+        };
     Run * run = new Run();
-    InitializeAll(run);
+    run->setWorkDir("/home/chengling/Research/Project/Cell/3dVertex/tvmdata/");
+    char confName[256];
+    char paraSID[256];
+    sprintf(confName,"/home/chengling/Research/Project/Cell/3dVertex/tvm/scripts/submissionScript/conf_N%i_s0%.4f_kV%.4f_T%.8f_id%i",numpts,s0,kV,temp,idx);
+    sprintf(paraSID,"_N%i_s0%.4f_kV%.4f_T%.8f_id%i",numpts,s0,kV,temp,idx);
+    run->setParasID(paraSID);
+    cout<<"reading conf: "<<confName<<endl;
+    InitializeAll(run, numpts, idx, confName);
     run->updatePolygonVertices();
 //    run->dumpConfigurationVtk();
 
@@ -63,11 +96,14 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-int InitializeAll(Run * run) {
+int InitializeAll(Run * run, int numpts, int idx, string confName) {
     printf("Initialization start ...\n");
 
     // load initial configuration
-    ifstream topofile("sample.topo");
+    char topoName[256];
+    sprintf(topoName,"/home/chengling/Research/Project/Cell/3dVertex/tvm/initialTopo/sample_N%i_id%i.topo",numpts,idx);
+
+    ifstream topofile(topoName);
     if (!topofile.is_open()) {
         cout << "Error opening sample topo file" << endl;
         exit(1);
@@ -222,7 +258,7 @@ int InitializeAll(Run * run) {
     // initialize reconnection object
     run->reconnection_ = new Reconnection(run);
 
-    LoadConf("conf", run);
+    LoadConf(confName, run);
 
     // update geometry and topology information
     run->updateGeoinfo();

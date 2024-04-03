@@ -48,6 +48,8 @@ Run::Run() {
     kB_ = 1.0;
 //    temperature_ = 1.0e-5;
     NCell_ = 512;
+    workDir = "./";
+    parasID ="_";
 }
 
 int Run::start() {
@@ -333,7 +335,7 @@ Edge *  Run::addEdge(Vertex * v0, Vertex * v1) {
 int Run::dumpConfigurationVtk() {
     //////////////////////////////////////////////////////////////////////////////////////
     stringstream filename;
-    filename << setw(7) << setfill('0') << (long int) (floor(simulation_time_ + 0.01 * dt_)) << ".sample.vtk";
+    filename << workDir << setw(7) << setfill('0') << (long int) (floor(simulation_time_ + 0.01 * dt_)) << ".sample" << parasID << ".vtk";
     ofstream out(filename.str().c_str());
     if (!out.is_open()) {
         cout << "Error opening output file " << filename.str().c_str() << endl;
@@ -412,7 +414,7 @@ int Run::dumpConfigurationVtk() {
 int     Run::dumpCellCenter() {
     updateCellVertices();
     stringstream filename;
-    filename << "cellCenter.txt";
+    filename << workDir << "cellCenter" << parasID << ".txt";
     ofstream out(filename.str().c_str(), std::ios_base::app);
     if (!out.is_open()) {
         cout << "Error opening output file " << filename.str().c_str() << endl;
@@ -458,7 +460,7 @@ int     Run::dumpCellCenter() {
 int     Run::dumpCellShapeIndex() {
     updateCellShapeIndex();
     stringstream filename;
-    filename << "cellShapeIndex.txt";
+    filename << workDir << "cellShapeIndex" << parasID << ".txt";
     ofstream out(filename.str().c_str(), std::ios_base::app);
     if (!out.is_open()) {
         cout << "Error opening output file " << filename.str().c_str() << endl;
@@ -488,7 +490,7 @@ int     Run::dumpCellShapeIndex() {
 
 int     Run::dumpCellVolume() {
     stringstream filename;
-    filename << "cellVolume.txt";
+    filename << workDir << "cellVolume" << parasID << ".txt";
     ofstream out(filename.str().c_str(), std::ios_base::app);
     if (!out.is_open()) {
         cout << "Error opening output file " << filename.str().c_str() << endl;
@@ -517,7 +519,7 @@ int     Run::dumpCellVolume() {
 
 int     Run::dumpTopo() {
     stringstream filename;
-    filename << "topo.txt";
+    filename << workDir << "topo" << parasID << ".txt";
 //    ofstream out(filename.str().c_str(), std::ios::binary | std::ios_base::app);
     ofstream out(filename.str().c_str(), std::ios_base::app);
     if (!out.is_open()) {
@@ -580,7 +582,7 @@ int     Run::dumpTopo() {
 
 int     Run::dumpReconnection() {
     stringstream filename;
-    filename << "reconnections.txt";
+    filename << workDir << "reconnections" << parasID << ".txt";
     ofstream out(filename.str().c_str(), std::ios_base::app);
     if (!out.is_open()) {
         cout << "Error opening output file " << filename.str().c_str() << endl;

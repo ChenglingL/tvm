@@ -1,0 +1,2 @@
+/usr/bin/ar qc librun.a  CMakeFiles/run.dir/Box.cpp.o CMakeFiles/run.dir/Run.cpp.o
+/usr/bin/ranlib librun.a

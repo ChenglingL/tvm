@@ -1,0 +1,2 @@
+/usr/bin/ar qc libreconnection.a  CMakeFiles/reconnection.dir/Reconnection.cpp.o
+/usr/bin/ranlib libreconnection.a

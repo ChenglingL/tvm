@@ -7,6 +7,7 @@ coauthor: Jennifer Schwarz @ Syracuse University, jschwarz@physics.syr.edu
 
 import pyvoro
 import numpy as np
+import sys
 
 class Vertex:
     def __init__(self, id):
@@ -45,7 +46,13 @@ class Cell:
         self.polygons_.append(polygon)
 
 def main():
-    Lx, Ly, Lz = (8, 8, 8)
+    #Lx, Ly, Lz = (8, 8, 8)
+    args = sys.argv
+    print(args)
+    Lx = int(sys.argv[1])
+    Ly = int(sys.argv[2])
+    Lz = int(sys.argv[3])
+    idx = int(sys.argv[4])
     points = generatePoints(Lx, Ly, Lz)
     # points = [[1.0, 2.0, 3.0], [4.0, 5.5, 6.0]]
     voroDict = pyvoro.compute_voronoi(
@@ -76,7 +83,7 @@ def main():
     checkVertexCells(vertices, edges, polygons, cells)
 
     # dumpVTK(vertices, edges, polygons, cells, points, (Lx, Ly, Lz))
-    dumpTopo(vertices, edges, polygons, cells, points, (Lx, Ly, Lz))
+    dumpTopo(vertices, edges, polygons, cells, points, (Lx, Ly, Lz),idx)
 
 def topologyVoro(voroDict, Lxyz):
     Lx, Ly, Lz = Lxyz
@@ -232,9 +239,10 @@ def checkVertexCells(vertices, edges, polygons, cells):
 #             z = point[2]
 #             file.write("{:12.5e} {:12.5e} {:12.5e}\n".format(x, y, z))
 
-def dumpTopo(vertices, edges, polygons, cells, points, Lxyz):
+def dumpTopo(vertices, edges, polygons, cells, points, Lxyz,idx):
     Lx, Ly, Lz = Lxyz
-    with open("sample.topo", "w") as file:
+    filename="sample_N%i_id%i.topo" % (Lx*Ly*Lz,idx)
+    with open(filename, "w") as file:
         file.write("vertices {:d}\n".format(len(vertices)))
         # vertices = dict(sorted(vertices.items(), key=lambda item: item[1].id_))
         # count = 0
