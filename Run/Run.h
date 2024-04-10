@@ -57,6 +57,12 @@ class Run {
     long int count_edges_;
     long int count_polygons_;
     long int count_cells_;
+    int n_offsets_; // the numer of different offsets for data saving
+    long int spacing_offsets_; // the spacing between offsets
+    double log_spacing_; // the spacing of log spacing steps. for example, 0.2 saves 5 configurations per decade
+    std::vector<long int> offsets_; //the vector that keeps track of all the different offsets
+    std::vector<long int> saving_index_; // keeps track of what the next frame to save for every offsets
+    std::vector<long int> log_spaced_steps_;// log spaced time steps.
     Volume * volume_;
     Interface * interface_;
     Reconnection * reconnection_;
@@ -86,7 +92,7 @@ class Run {
     int     deletePolygon(Polygon *);
     Edge *  addEdge(Vertex *, Vertex *);
     int     dumpConfigurationVtk();
-    int     dumpCellCenter();
+    int     dumpCellCenter(long int offset);
     int     dumpCellShapeIndex();
     int     dumpCellVolume();
     int     dumpTopo();

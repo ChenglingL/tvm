@@ -460,6 +460,22 @@ int LoadConf(string filename, Run * run) {
             cout << "box: " << run->box_->size_[0] << " " << run->box_->size_[1] << " " << run->box_->size_[2] << " ";
             cout << "periodic boundary condition: " << run->box_->boundaryCondition_[0] << " " << run->box_->boundaryCondition_[1] << " " << run->box_->boundaryCondition_[2] << endl;
         }
+        else if (tokens[0] == "offsets") {
+            if (tokens.size() != 4) {
+                cerr << "conf file error: ";
+                for (int j = 0; j < tokens.size(); j++) {
+                    cerr << tokens[j] << " ";
+                }
+                cerr << endl;
+                exit(1);
+            }
+            run->n_offsets_= atoi(tokens[1].c_str());
+            run->spacing_offsets_= atoi(tokens[2].c_str());
+            run->log_spacing_= atof(tokens[3].c_str());
+            cout << "number of offsets " << run->n_offsets_ << endl;
+            cout << "saving offsets start from 0 with the spacing of " << run->spacing_offsets_ <<endl;
+            cout << "log spacing in exponent " << run->log_spacing_ << endl;
+        }
         else {
             cerr << "conf file error: ";
             for (int j = 0; j < tokens.size(); j++) {

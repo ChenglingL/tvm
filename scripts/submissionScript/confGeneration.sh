@@ -14,6 +14,10 @@ lx="${10}"
 ly="${11}"
 lz="${12}"
 id="${13}"
+noffset="${14}"
+spacingoffsets="${15}"
+logspacing="${16}"
+
 Ncell=$((lx * lx * lx))
 NEW_TIME="time -$startTime $endTime $timeStep"
 
@@ -25,19 +29,18 @@ NEW_LTH="Lth $Lth"
 NEW_T="T $T"
 NEW_KV="kv $kV"
 NEW_BOX="box $lx. $ly. $lz. p p p"
+NEW_OFFSETS="offsets $noffset $spacingoffsets $logspacing"
 
 # Define the filename with VALUE included
 NEW_FILENAME="conf_N${Ncell}_s0${s0}_kV${kV}_T${T}_id${id}"
-
-# Use sed to replace specific values in the original file and save to a new file
-sed -e "s/^time .*/$NEW_TIME/" \
-    -e "s/^dump .*/$NEW_DUMP/" \
-    -e "s/^log .*/$NEW_LOG/" \
-    -e "s/^s0 .*/$NEW_S0/" \
-    -e "s/^Lth .*/$NEW_LTH/" \
-    -e "s/^T .*/$NEW_T/" \
-    -e "s/^kv .*/$NEW_KV/" \
-    -e "s/^box .*/$NEW_BOX/" \
-    conf > "$NEW_FILENAME"
-
-echo "Modified file created: $NEW_FILENAME"
+{
+    echo "$NEW_TIME" 
+    echo "$NEW_DUMP" 
+    echo "$NEW_LOG"
+    echo "$NEW_S0" 
+    echo "$NEW_LTH" 
+    echo "$NEW_T" 
+    echo "$NEW_KV" 
+    echo "$NEW_BOX" 
+    echo "$NEW_OFFSETS" 
+} > $NEW_FILENAME

@@ -59,7 +59,19 @@ int Run::start() {
     simulation_time_ = t_start_;
     double t_roundError = 0.01*dt_;
     auto start = chrono::steady_clock::now();
-
+    offsets_.push_back(0);
+    for(int ii=1;ii<n_offsets_;ii++){
+        offsets_.push_back(ii*spacing_offsets_);
+        saving_index_.push_back(0);
+    }
+    log_spaced_steps_.push_back(0);
+    long int log_spaced_steps_count_ = 1;
+    while (log_spaced_steps_.back()<t_end_/dt_)
+    {
+        log_spaced_steps_.push_back(floor(pow(10,log_spacing_*log_spaced_steps_count_)));
+        log_spaced_steps_count_++;
+    }
+    
     printf("\nSimulation Start ...\n");
     printf("Real time elapsed: Rte\n");
     printf("Time        ");
@@ -99,19 +111,39 @@ int Run::start() {
             count_log_++;
         }
         // dump
-        if (simulation_time_ - t_start_ + t_roundError > count_dump_ * dump_period_) {
-            if (simulation_time_ > (-0.01)*dt_) {
-                dumpTopo();
-                dumpCellCenter();
-                dumpCellShapeIndex();
-                dumpCellVolume();
-                dumpReconnection();
-//                dumpConfigurationVtk();
-            }
-//            dumpCellCenter();
-//            dumpCellShapeIndex();
-            count_dump_++;
+//         if (simulation_time_ - t_start_ + t_roundError > count_dump_ * dump_period_) {
+//             if (simulation_time_ > (-0.01)*dt_) {
+//                 dumpTopo();
+//                 dumpCellCenter();
+//                 dumpCellShapeIndex();
+//                 dumpCellVolume();
+//                 dumpReconnection();
+// //                dumpConfigurationVtk();
+//             }
+// //            dumpCellCenter();
+// //            dumpCellShapeIndex();
+//             count_dump_++;
+//         }
+        for (int ii = 0; ii < n_offsets_; ii++)
+        {
+            if (floor((simulation_time_ - t_start_ + t_roundError)/dt_) > log_spaced_steps_[saving_index_[ii]]+offsets_[ii]) {
+                if (simulation_time_ > (-0.01)*dt_) {
+                    //dumpTopo();
+                    dumpCellCenter(offsets_[ii]);
+                    //dumpCellShapeIndex();
+                    //dumpCellVolume();
+                    //dumpReconnection();
+    //                dumpConfigurationVtk();
+                    saving_index_[ii]++;
+                }
+    //            dumpCellCenter();
+    //            dumpCellShapeIndex();
+    
+                count_dump_++;
         }
+        }
+        
+
 
         // Euler dynamics
         updateVerticesPosition();
@@ -411,10 +443,10 @@ int Run::dumpConfigurationVtk() {
     return 0;
 }
 
-int     Run::dumpCellCenter() {
+int     Run::dumpCellCenter(long int offset) {
     updateCellVertices();
     stringstream filename;
-    filename << workDir << "cellCenter" << parasID << ".txt";
+    filename << workDir << "cellCenter" << parasID <<"_offsetSteps"<<offset<< ".txt";
     ofstream out(filename.str().c_str(), std::ios_base::app);
     if (!out.is_open()) {
         cout << "Error opening output file " << filename.str().c_str() << endl;
