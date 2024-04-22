@@ -48,15 +48,19 @@ int main(int argc, char *argv[]) {
     double s0 = 5.8;
     int idx = 0;
     double kV = 10.;
+    double dt = 0.001;
+    double equilibration = 1000.;
     int c;
-    while((c=getopt(argc,argv,"k:n:g:m:s:r:a:i:v:b:x:y:z:p:t:e:q:c:")) != -1)
+    while((c=getopt(argc,argv,"k:n:g:m:s:r:a:i:v:b:x:y:z:p:t:e:q:c:d:e:")) != -1)
         switch(c)
         {
             case 'n': numpts = atoi(optarg); break;
             case 't': temp = atof(optarg); break;
             case 's': s0 = atof(optarg); break;
             case 'k': kV = atof(optarg); break;
-            case 'i': idx = atof(optarg); break;
+            case 'i': idx = atoi(optarg); break;
+            case 'd': dt = atof(optarg); break;
+            case 'e': equilibration = atof(optarg); break;
             case '?':
                     if(optopt=='c')
                         std::cerr<<"Option -" << optopt << "requires an argument.\n";
@@ -73,7 +77,7 @@ int main(int argc, char *argv[]) {
     char confName[256];
     char paraSID[256];
     sprintf(confName,"/home/chengling/Research/Project/Cell/3dVertex/tvm/scripts/submissionScript/conf_N%i_s0%.4f_kV%.4f_T%.8f_id%i",numpts,s0,kV,temp,idx);
-    sprintf(paraSID,"_N%i_s0%.4f_kV%.4f_T%.8f_id%i",numpts,s0,kV,temp,idx);
+    sprintf(paraSID,"_N%i_s0%.4f_kV%.4f_T%.8f_equili%.2f_dt%.6f_id%i",numpts,s0,kV,temp,equilibration,dt,idx);
     run->setParasID(paraSID);
     cout<<"reading conf: "<<confName<<endl;
     InitializeAll(run, numpts, idx, confName);

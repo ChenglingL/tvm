@@ -68,7 +68,8 @@ int Run::start() {
     long int log_spaced_steps_count_ = 1;
     while (log_spaced_steps_.back()<t_end_/dt_)
     {
-        log_spaced_steps_.push_back(floor(pow(10,log_spacing_*log_spaced_steps_count_)));
+        log_spaced_steps_.push_back(floor(pow(10,log_spacing_*log_spaced_steps_count_+2)));
+        //cout<<"log_spaced steps: "<<log_spaced_steps_.back()<<endl;
         log_spaced_steps_count_++;
     }
     
@@ -126,7 +127,7 @@ int Run::start() {
 //         }
         for (int ii = 0; ii < n_offsets_; ii++)
         {
-            if (floor((simulation_time_ - t_start_ + t_roundError)/dt_) > log_spaced_steps_[saving_index_[ii]]+offsets_[ii]) {
+            if (floor((simulation_time_  + t_roundError)/dt_) > log_spaced_steps_[saving_index_[ii]+1]+offsets_[ii]) {
                 if (simulation_time_ > (-0.01)*dt_) {
                     //dumpTopo();
                     dumpCellCenter(offsets_[ii]);
@@ -135,6 +136,7 @@ int Run::start() {
                     //dumpReconnection();
     //                dumpConfigurationVtk();
                     saving_index_[ii]++;
+                    //cout<<"offset: "<<ii<<" saving_index_: "<<saving_index_[ii]<<endl;
                 }
     //            dumpCellCenter();
     //            dumpCellShapeIndex();
